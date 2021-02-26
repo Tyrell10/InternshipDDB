@@ -83,7 +83,7 @@ void update(String url, int port)
 
         while (client.available() == 0) 
         {
-            if (millis() - timeout > 5000) 
+            if (millis() - timeout > 7000) 
             {
                 Serial.println("Client Timeout !");
                 client.stop();
@@ -188,7 +188,7 @@ void callback(char* topic, byte* payload, unsigned int length)
     String _message = String((char*)payload);
     String _topic = String(topic);
 
-    if(_topic.equals(TOPIC) == 1) update(_message, 80);
+    if(_topic.equals(TOPIC) == 1) update(_message, 1883);
     
 }
 
@@ -202,11 +202,11 @@ void connectToWiFi()
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_SECRET);
 
-    while (WiFi.status() != WL_CONNECTED) 
-    {
-        delay(1000);
-        Serial.print(".");
-    }
+    while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
+  }
 
     if (!MDNS.begin(HOSTNAME)) 
     {
@@ -231,7 +231,7 @@ void reconnect()
         {
             Serial.println("connected");
             Serial.println("EspDuino32 Ready!");
-            mqtt.subscribe(TOPIC, 2);
+            mqtt.subscribe(TOPIC,1);
         }
         else
         {
