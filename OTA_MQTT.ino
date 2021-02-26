@@ -83,7 +83,7 @@ void update(String url, int port)
 
         while (client.available() == 0) 
         {
-            if (millis() - timeout > 7000) 
+            if (millis() - timeout > 5000) 
             {
                 Serial.println("Client Timeout !");
                 client.stop();
@@ -188,7 +188,7 @@ void callback(char* topic, byte* payload, unsigned int length)
     String _message = String((char*)payload);
     String _topic = String(topic);
 
-    if(_topic.equals(TOPIC) == 1) update(_message, 1883);
+    if(_topic.equals(TOPIC) == 1) update(_message, 6001);
     
 }
 
